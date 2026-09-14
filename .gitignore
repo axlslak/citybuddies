@@ -1,0 +1,9 @@
+[Dd]ebug/
+[Rr]elease/
+[Oo]bj/
+.vs/
+*.suo
+*.user
+*.pdb
+/buddies.json
+
