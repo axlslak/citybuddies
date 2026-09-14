@@ -16,6 +16,8 @@ Open `CityBuddies.sln`, select `Release`, and build. The portable output is writ
 
 The build automatically downloads the GameData files matching AOSharp.Clientless 1.0.16, verifies their SHA-256 hashes, and copies them to `release\GameData`. This includes the required `StaticDynelData.bin`. The verified files are cached under `.dependencies`, so later builds can reuse them.
 
+Each buddy AppDomain preloads `StaticDynelData.bin` through a shared named mutex before concurrent login begins. This prevents AOSharp.Clientless 1.0.16 instances from racing over its exclusive first file read, including when multiple CityBuddies profiles or CityDwellers run at the same time.
+
 ## Configure
 
 Copy `buddies.example.json` to `release\buddies.json`, then replace the examples:
