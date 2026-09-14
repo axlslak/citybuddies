@@ -14,6 +14,8 @@ Requirements:
 
 Open `CityBuddies.sln`, select `Release`, and build. The portable output is written to `release`.
 
+The build automatically downloads the GameData files matching AOSharp.Clientless 1.0.16, verifies their SHA-256 hashes, and copies them to `release\GameData`. This includes the required `StaticDynelData.bin`. The verified files are cached under `.dependencies`, so later builds can reuse them.
+
 ## Configure
 
 Copy `buddies.example.json` to `release\buddies.json`, then replace the examples:
@@ -33,4 +35,3 @@ Add as many entries as required. Entries do not need related account names, pass
 ## Run
 
 Run `Buddies.exe`. It starts every configured login concurrently and keeps the clients alive with automatic reconnect enabled. Press Enter to terminate the executable. There is intentionally no logout or AppDomain-unload workflow.
-
