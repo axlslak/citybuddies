@@ -1,0 +1,13 @@
+[
+  {
+    "Username": "first-account",
+    "Password": "first-password",
+    "Character": "Firstcharacter"
+  },
+  {
+    "Username": "completely-different-account",
+    "Password": "another-password",
+    "Character": "Unrelatedname"
+  }
+]
+
