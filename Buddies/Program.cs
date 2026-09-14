@@ -23,13 +23,29 @@ namespace CityBuddies
             if (ClientlessGameDataBootstrap.IsRestoreCommand(args))
                 return ClientlessGameDataBootstrap.Run(args);
 
+            string configFileName;
+            try
+            {
+                configFileName = ResolveConfigFileName(args);
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine("Usage: Buddies.exe [profile-name]");
+                Console.WriteLine();
+                Console.WriteLine("Press ENTER to exit.");
+                Console.ReadLine();
+                return 1;
+            }
+
             Console.Title = "CityBuddies";
             Console.WriteLine("CityBuddies");
             Console.WriteLine("===========");
 
             try
             {
-                List<BuddyAccount> accounts = ReadAccounts();
+                List<BuddyAccount> accounts = ReadAccounts(configFileName);
+                Console.WriteLine($"Profile: {configFileName}");
                 Console.WriteLine($"Starting {accounts.Count} configured buddies...");
 
                 Logger logger = new LoggerConfiguration()
@@ -93,13 +109,30 @@ namespace CityBuddies
             }
         }
 
-        private static List<BuddyAccount> ReadAccounts()
+        private static string ResolveConfigFileName(string[] args)
         {
-            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ConfigFileName);
+            if (args == null || args.Length == 0)
+                return ConfigFileName;
+
+            if (args.Length != 1 || string.IsNullOrWhiteSpace(args[0]))
+                throw new ArgumentException("Specify at most one profile name.");
+
+            string profile = args[0].Trim();
+            if (Path.GetFileName(profile) != profile)
+                throw new ArgumentException("The profile must be a file name, not a path.");
+
+            return profile.EndsWith(".json", StringComparison.OrdinalIgnoreCase)
+                ? profile
+                : profile + ".json";
+        }
+
+        private static List<BuddyAccount> ReadAccounts(string configFileName)
+        {
+            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, configFileName);
             if (!File.Exists(path))
             {
                 throw new FileNotFoundException(
-                    $"Put {ConfigFileName} beside Buddies.exe. See buddies.example.json for the format.",
+                    $"Put {configFileName} beside Buddies.exe. See buddies.example.json for the format.",
                     path);
             }
 
@@ -107,7 +140,7 @@ namespace CityBuddies
             List<BuddyAccount> accounts = JsonConvert.DeserializeObject<List<BuddyAccount>>(json);
 
             if (accounts == null || accounts.Count == 0)
-                throw new InvalidDataException($"{ConfigFileName} must contain at least one buddy account.");
+                throw new InvalidDataException($"{configFileName} must contain at least one buddy account.");
 
             for (int index = 0; index < accounts.Count; index++)
             {
@@ -118,7 +151,7 @@ namespace CityBuddies
                     string.IsNullOrWhiteSpace(account.Character))
                 {
                     throw new InvalidDataException(
-                        $"Entry {index + 1} in {ConfigFileName} requires Username, Password, and Character.");
+                        $"Entry {index + 1} in {configFileName} requires Username, Password, and Character.");
                 }
 
                 account.Username = account.Username.Trim();
