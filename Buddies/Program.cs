@@ -18,8 +18,11 @@ namespace CityBuddies
         private const string ConfigFileName = "buddies.json";
         private static readonly List<ClientDomain> Domains = new List<ClientDomain>();
 
-        private static int Main()
+        private static int Main(string[] args)
         {
+            if (ClientlessGameDataBootstrap.IsRestoreCommand(args))
+                return ClientlessGameDataBootstrap.Run(args);
+
             Console.Title = "CityBuddies";
             Console.WriteLine("CityBuddies");
             Console.WriteLine("===========");
