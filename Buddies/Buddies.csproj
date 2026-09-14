@@ -14,6 +14,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <PlatformTarget>x86</PlatformTarget>
+    <ClientlessGameDataCache>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\.dependencies\AOSharp.Clientless\1.0.16\GameData'))</ClientlessGameDataCache>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -33,10 +34,14 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="StayOnlinePlugin.cs" />
+    <Compile Include="ClientlessGameDataBootstrap.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <Target Name="RestoreClientlessGameData" AfterTargets="Build">
+    <Message Text="Ensuring AOSharp.Clientless runtime GameData is available..." Importance="high" />
+    <Exec Command="&quot;$(TargetPath)&quot; restore-gamedata &quot;$(ClientlessGameDataCache)&quot; &quot;$(TargetDir)GameData&quot;" />
+  </Target>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
-
