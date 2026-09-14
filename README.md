@@ -35,3 +35,15 @@ Add as many entries as required. Entries do not need related account names, pass
 ## Run
 
 Run `Buddies.exe`. It starts every configured login concurrently and keeps the clients alive with automatic reconnect enabled. Press Enter to terminate the executable. There is intentionally no logout or AppDomain-unload workflow.
+
+With no argument, `Buddies.exe` loads `buddies.json`. To keep multiple profiles beside the executable, pass the profile name:
+
+```bat
+Buddies.exe family
+```
+
+That loads `family.json`. Supplying the extension explicitly also works:
+
+```bat
+Buddies.exe family.json
+```
