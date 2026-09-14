@@ -9,6 +9,7 @@ using AOSharp.Clientless;
 using AOSharp.Clientless.Common;
 using Newtonsoft.Json;
 using Serilog;
+using Serilog.Core;
 
 namespace CityBuddies
 {
@@ -126,9 +127,9 @@ namespace CityBuddies
 
         private sealed class BuddyAccount
         {
-            public string Username;
-            public string Password;
-            public string Character;
+            public string Username { get; set; }
+            public string Password { get; set; }
+            public string Character { get; set; }
         }
     }
 }
